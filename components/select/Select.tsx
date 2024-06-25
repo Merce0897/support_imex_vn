@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { ReactElement, ReactNode, useEffect, useState } from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -21,20 +21,19 @@ import {
 import { Spinner } from "../spinner/Spinner"
 import { ControllerRenderProps } from "react-hook-form"
 
-const url = process.env.chemical_declare_url
+const url = process.env.NEXT_PUBLIC_CHEMICAL_DECLARE_URL
 
-export function ComboboxDemo({ query, value, onChange, name, onBlur }: {
+export function ComboboxDemo({ query, value, onChange, icons, ...rest }: {
     query: string
     value: {
         id: number
         value: string
-    };
+    } | undefined;
+    icons?: ReactElement
     onChange: (value: ({
         id: number
         value: string
     })) => void;
-    name: string;
-    onBlur: () => void;
 }) {
     const [open, setOpen] = useState(false)
     const [items, setItems] = useState<TSelect[]>([])
@@ -72,6 +71,14 @@ export function ComboboxDemo({ query, value, onChange, name, onBlur }: {
 
                                 }])
                                 break;
+                            case 'nguyhiem':
+                                setItems((prev: TSelect[]) => [...prev, {
+                                    id: i + 1,
+                                    value: result[i].fiMaXLNguyHiem,
+                                    label: result[i].fiTenXLNguyHiem
+
+                                }])
+                                break;
                         }
                     }
 
@@ -94,13 +101,23 @@ export function ComboboxDemo({ query, value, onChange, name, onBlur }: {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className={cn({ 'justify-between': available, 'opacity-50 cursor-wait': !available })}
+                    className={cn({ 'justify-between': available, 'opacity-50 cursor-wait': !available }, 'w-full')}
                 >
                     {
                         items?.length ? (
                             <span className="flex justify-between w-full">
                                 {value ? items.find((item) => item.value === value?.value)?.label : "Chọn..."}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                {
+                                    icons ?
+                                        (
+                                            icons
+                                        )
+                                        :
+                                        (
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        )
+                                }
+
                             </span>
                         )
                             : (
@@ -116,7 +133,7 @@ export function ComboboxDemo({ query, value, onChange, name, onBlur }: {
             <PopoverContent className="p-0" align="start">
                 <Command>
                     <CommandInput placeholder="Tìm kiếm..." />
-                    <CommandEmpty>No framework found.</CommandEmpty>
+                    <CommandEmpty>Không có kết quả tìm kiếm</CommandEmpty>
                     <CommandList>
                         <CommandGroup>
                             {items.map((item) => (

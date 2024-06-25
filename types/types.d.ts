@@ -68,3 +68,21 @@ type TSelect = {
   value: string;
   label: string;
 };
+
+type TChemicalItem = {
+  id: number;
+  casNo: {
+    id: number;
+    value: string;
+  }[];
+  itemNm: string;
+  hsCd: string;
+  content: string;
+  weight: string;
+  unit: number;
+  state: number;
+  origin: number;
+  danger: number;
+  reason: number;
+  detail: string;
+};

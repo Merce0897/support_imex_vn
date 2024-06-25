@@ -154,10 +154,10 @@ const CasCode = () => {
       if (debouncedSearch) {
         let results = data.data.filter(item => item.Cas.includes(search))
         if (onlyDoc) results = results.filter(item => item.QD !== null)
-        
+
         setPage(0)
         setTotal(results.length)
-        setRenderData(results.slice(0,20))
+        setRenderData(results.slice(0, 20))
       }
       setLoading(false);
     };
@@ -192,7 +192,7 @@ const CasCode = () => {
     <div className="w-full px-8 py-10">
       <div className="flex mb-8">
         <TextField
-          className="w-[40rem]"
+          className="w-[40rem] bg-white"
           id="outlined-basic"
           label="Search by cas code"
           variant="outlined"
@@ -216,36 +216,36 @@ const CasCode = () => {
       </div>
       <div>
         <FormGroup>
-          <FormControlLabel control={<IOSSwitch sx={{ m: 1 }} onChange={() => setOnlyDoc(!onlyDoc)} checked={onlyDoc}/>} label="Chọn các mã có phụ lục" />
+          <FormControlLabel control={<IOSSwitch sx={{ m: 1 }} onChange={() => setOnlyDoc(!onlyDoc)} checked={onlyDoc} />} label="Chọn các mã có phụ lục" />
         </FormGroup>
         {
           init ? (
-            <CollapsibleTable data={renderData}/>
+            <CollapsibleTable data={renderData} />
           )
-          :
-          (
-            <Loading />
-          )
+            :
+            (
+              <Loading />
+            )
         }
-        
-        
+
+
       </div>
       <TablePagination
-          count={total}
-          page={page}
-          rowsPerPage={20}
-          component="div"
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[]}
-          align="right"
-        />
+        count={total}
+        page={page}
+        rowsPerPage={20}
+        component="div"
+        onPageChange={handleChangePage}
+        rowsPerPageOptions={[]}
+        align="right"
+      />
     </div>
   );
 };
 
-const CollapsibleTable = ({data}: {data: TCas[]})  => {
+const CollapsibleTable = ({ data }: { data: TCas[] }) => {
   return (
-    <TableContainer component={Paper} sx={{ height: 600, width: '100%'}}>
+    <TableContainer component={Paper} sx={{ height: 600, width: '100%' }}>
       <Table stickyHeader aria-label="collapsible table">
         <TableHead>
           <TableRow>
@@ -263,11 +263,11 @@ const CollapsibleTable = ({data}: {data: TCas[]})  => {
         </TableBody>
       </Table>
     </TableContainer>
-    
+
   );
 }
 
-const Row = ({row}: {row: TCas}) => {
+const Row = ({ row }: { row: TCas }) => {
   const [open, setOpen] = React.useState(false);
   return (
     <React.Fragment>
@@ -277,22 +277,22 @@ const Row = ({row}: {row: TCas}) => {
         </TableCell>
         <TableCell align="right" width={100}>{row.HSCode}</TableCell>
         <TableCell width={100} align="center">
-        {
-          row.QD && (
-          
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              className="bg-red-200 hover:bg-red-100"
-              onClick={() => setOpen(!open)}
-            >
-              {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-            </IconButton>
-          
-          )
-        }
+          {
+            row.QD && (
+
+              <IconButton
+                aria-label="expand row"
+                size="small"
+                className="bg-red-200 hover:bg-red-100"
+                onClick={() => setOpen(!open)}
+              >
+                {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              </IconButton>
+
+            )
+          }
         </TableCell>
-        
+
         <TableCell align="left" width={300}>{row.TenQuocTe}</TableCell>
         <TableCell align="left" width={300}>{row.TenTiengViet}</TableCell>
         {/* <TableCell align="right">{row.protein}</TableCell> */}
@@ -302,10 +302,10 @@ const Row = ({row}: {row: TCas}) => {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1, marginBottom: 5 }}>
               {row.QD && row.QD.map((item, idx) => (
-                    <Typography key={idx} gutterBottom component="div">
-                      {item}
-                    </Typography>
-                  ))}
+                <Typography key={idx} gutterBottom component="div">
+                  {item}
+                </Typography>
+              ))}
             </Box>
           </Collapse>
         </TableCell>

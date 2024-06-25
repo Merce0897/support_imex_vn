@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/popover"
 import { ComboboxDemo } from '@/components/select/Select'
 import { UploadFile } from '@/components/UploadFile/UploadFile'
+import { TableDemo } from './table'
+import { DialogDemo } from './createNewChemical'
 
 
 type Inputs = {
@@ -45,50 +47,36 @@ type Inputs = {
         url: string,
         name: string
     }
-    ChemicalList: ChemicalItem[]
+    ChemicalList: TChemicalItem[]
 }
-
-type ChemicalItem = {
-    casNo: string
-    itemNm: string
-    hsCd: string
-    content: string
-    weight: string
-    unit: number
-    state: number
-    origin: number
-    danger: number
-    reason: number
-    detail: string
-}
-
-
-
-const url = process.env.chemical_declare_url
 
 function Page() {
     const [calendarOpen, setCalendarOpen] = useState(false);
-    const [casList, setCasList] = useState([])
-    const [dangerList, setDangerList] = useState([])
-
-    const [country, setCountry] = useState(0)
-    const [gate, setGate] = useState(0)
 
     const form = useForm<Inputs>()
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         console.log(data)
+        fetch('/api/khai-bao-hoa-chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
     }
 
     return (
-        <div className='mx-auto h-[100vh] flex justify-center items-center bg-indigo-200 '>
+        <div className='mx-auto flex justify-center items-center '>
             <div className='w-1/2'>
+                <div className='h-48 w-full' />
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 full">
                         <div className='flex gap-5 w-full'>
                             <FormField
                                 control={form.control}
                                 name="inv"
+                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <FormItem className='flex-1'>
                                         <FormLabel>Số hóa đơn</FormLabel>
@@ -102,6 +90,7 @@ function Page() {
                             <FormField
                                 control={form.control}
                                 name="invDt"
+                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <FormItem className="flex flex-col justify-between flex-1">
                                         <FormLabel className='mt-1'>Ngày hóa đơn</FormLabel>
@@ -144,6 +133,7 @@ function Page() {
                         <FormField
                             control={form.control}
                             name="exCom"
+                            rules={{ required: true }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Công ty xuất khẩu</FormLabel>
@@ -158,6 +148,7 @@ function Page() {
                             <FormField
                                 control={form.control}
                                 name="exCtry"
+                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <FormItem className="flex flex-col justify-between flex-1">
                                         <FormLabel className='mt-1'>Quốc gia xuất khẩu</FormLabel>
@@ -169,6 +160,7 @@ function Page() {
                             <FormField
                                 control={form.control}
                                 name="imGte"
+                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <FormItem className="flex flex-col justify-between flex-1">
                                         <FormLabel className='mt-1'>Cửa khẩu nhập hóa chất</FormLabel>
@@ -183,11 +175,12 @@ function Page() {
                             <FormField
                                 control={form.control}
                                 name="HDUrl"
+                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <FormItem className='flex-1'>
                                         <FormLabel>File Hóa đơn</FormLabel>
                                         <FormControl>
-                                            <UploadFile {...field} />
+                                            <UploadFile type='invoice' {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -195,22 +188,54 @@ function Page() {
                             />
                             <FormField
                                 control={form.control}
-                                name="HDUrl"
+                                name="HCATUrl"
+                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <FormItem className='flex-1'>
                                         <FormLabel>File An toàn hóa chất</FormLabel>
                                         <FormControl>
-                                            <UploadFile {...field} />
+                                            <UploadFile type='safety' {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
-                        <h2>Danh sách hàng</h2>
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="ChemicalList"
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <FormItem className='flex-1'>
+                                        <FormControl>
+                                            <DialogDemo {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                        </div>
+                        <FormField
+                            control={form.control}
+                            name="ChemicalList"
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <FormItem className='flex-1'>
+                                    <FormControl>
+                                        <TableDemo {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <Button type="submit">Submit</Button>
                     </form>
                 </Form>
+                <div className='h-48 w-full' />
+
             </div>
 
         </div>
