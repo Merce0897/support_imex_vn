@@ -32,6 +32,8 @@ export function UploadFile({ type, value, onChange, name, onBlur }: ({
             url: data.path,
             name: file.name
         })
+        console.log('Create FILE success');
+
     }
 
     return (

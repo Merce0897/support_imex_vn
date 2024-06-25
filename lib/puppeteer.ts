@@ -31,6 +31,8 @@ type Record = {
 };
 
 export const callCreateNewChemical = async (record: Record) => {
+  console.log("NEW RECORD: ", record);
+
   // Launch the browser and open a new blank page
   const user = {
     id: "3700337163",
@@ -62,7 +64,6 @@ export const callCreateNewChemical = async (record: Record) => {
   const sftURL = supabase.storage
     .from("attachment_chemical")
     .getPublicUrl(record.safetyURL);
-
   await downloadPdf(invURL.data.publicUrl, fileNameInv);
   await downloadPdf(sftURL.data.publicUrl, fileNameSft);
 
@@ -70,7 +71,7 @@ export const callCreateNewChemical = async (record: Record) => {
     concurrency: Cluster.CONCURRENCY_CONTEXT,
     maxConcurrency: 4,
     puppeteerOptions: {
-      headless: true,
+      headless: false,
       args: [
         "--no-sandbox",
         "--disable-dev-shm-usage",
@@ -284,7 +285,10 @@ export const callCreateNewChemical = async (record: Record) => {
         'input[data-bind*="datepicker: fiNgayHoaDon "]',
         record.exportDate
       );
-
+      // await page.evaluate("#txt_FromDateText", );
+      await page.screenshot({
+        path: "./screenshot.jpg",
+      });
       await page.click(
         '::-p-xpath(//*[@id="moit14Create"]/div/div/div/div[2]/div/div/div/div/fieldset[2]/form/div[2]/div/div[4]/span[1])'
       );
@@ -339,10 +343,9 @@ export const callCreateNewChemical = async (record: Record) => {
 
       await Promise.all([
         page.click(
-          '::-p-xpath(//*[@id="moit14Create"]/div/div/div/div[2]/div/div/div/div/div/div/div/button[1])'
+          "::-p-xpath(/html/body/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div/div/div/div[2]/div/div/div/div/div/div/div/button[1])"
         ),
         page.waitForSelector("::-p-xpath(/html/body/div[5]/div)"),
-        page.waitForSelector("::-p-xpath(/html/body/div[5]/div/div[3]/a[1])"),
       ]);
 
       const confirm = await page.$(
@@ -357,11 +360,13 @@ export const callCreateNewChemical = async (record: Record) => {
           console.error("Element is not an HTMLElement");
         }
       });
-
       console.log("SUCCESS");
       const { data, error } = await supabase.storage
         .from("attachment_chemical")
         .remove([record.invoiceURL, record.safetyURL]);
+
+      fs.unlink(fileNameInv, (err) => console.log(err));
+      fs.unlink(fileNameSft, (err) => console.log(err));
     } catch (error) {
       console.log(error);
     }

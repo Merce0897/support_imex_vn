@@ -2,13 +2,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { format } from "date-fns";
 import { callCreateNewChemical } from "@/lib/puppeteer";
+import { supabase } from "@/lib/supabase";
 
 type ResponseData = {
   message: string;
 };
 export async function POST(request: Request) {
   const data = await request.json();
-  console.log(data);
   const filterData = {
     invoice: data.inv,
     exportCompany: data.exCom,
