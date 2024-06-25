@@ -1,8 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { format } from "date-fns";
 import { callCreateNewChemical } from "@/lib/puppeteer";
-import { supabase } from "@/lib/supabase";
 
 type ResponseData = {
   message: string;
