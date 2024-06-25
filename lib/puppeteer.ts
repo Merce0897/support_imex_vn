@@ -46,7 +46,13 @@ export const callCreateNewChemical = async (record: Record) => {
         .get(url, (response) => {
           response.pipe(file);
           file.on("finish", () => {
-            file.close(resolve);
+            file.close((err) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve();
+              }
+            });
           });
         })
         .on("error", (err) => {
