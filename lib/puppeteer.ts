@@ -4,6 +4,7 @@ import { supabase } from "./supabase";
 import fs from "fs";
 import https from "https";
 import * as path from "path";
+import chromium from "@sparticuz/chromium-min";
 
 type Record = {
   invoice: string;
@@ -80,9 +81,10 @@ export const callCreateNewChemical = async (record: Record) => {
     concurrency: Cluster.CONCURRENCY_CONTEXT,
     maxConcurrency: 4,
     puppeteerOptions: {
-      headless: true,
+      headless: chromium.headless,
       slowMo: 10,
       args: [
+        ...chromium.args,
         "--no-sandbox",
         "--disable-dev-shm-usage",
         "--disable-gpu",
