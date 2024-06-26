@@ -82,7 +82,7 @@ export const callCreateNewChemical = async (record: Record) => {
     maxConcurrency: 4,
     puppeteerOptions: {
       headless: true,
-      executablePath: executablePath(),
+      executablePath: "/home/sbx_user1051/.cache/puppeteer",
       slowMo: 10,
       args: [
         "--no-sandbox",
