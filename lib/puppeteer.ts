@@ -4,6 +4,7 @@ import { supabase } from "./supabase";
 import fs from "fs";
 import https from "https";
 import * as path from "path";
+import { executablePath } from "puppeteer";
 
 type Record = {
   invoice: string;
@@ -81,7 +82,7 @@ export const callCreateNewChemical = async (record: Record) => {
     maxConcurrency: 4,
     puppeteerOptions: {
       headless: true,
-      executablePath: path.join(__dirname, ".cache", "puppeteer"),
+      executablePath: executablePath(),
       slowMo: 10,
       args: [
         "--no-sandbox",
