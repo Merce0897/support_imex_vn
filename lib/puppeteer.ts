@@ -80,7 +80,7 @@ export const callCreateNewChemical = async (record: Record) => {
     concurrency: Cluster.CONCURRENCY_CONTEXT,
     maxConcurrency: 4,
     puppeteerOptions: {
-      headless: false,
+      headless: true,
       slowMo: 10,
       args: [
         "--no-sandbox",
