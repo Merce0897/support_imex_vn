@@ -3,6 +3,7 @@ import { ElementHandle } from "puppeteer";
 import { supabase } from "./supabase";
 import fs from "fs";
 import https from "https";
+import * as path from "path";
 
 type Record = {
   invoice: string;
@@ -40,9 +41,10 @@ export const callCreateNewChemical = async (record: Record) => {
     password: "Uchiyamavn123#",
   };
 
-  const downloadPdf = (url: string, path: string): Promise<void> => {
+  const downloadPdf = (url: string, fileName: string): Promise<void> => {
     return new Promise((resolve, reject) => {
-      const file = fs.createWriteStream(path);
+      const tempPath = path.join("/tmp", fileName);
+      const file = fs.createWriteStream(tempPath);
       https
         .get(url, (response) => {
           response.pipe(file);
@@ -57,7 +59,7 @@ export const callCreateNewChemical = async (record: Record) => {
           });
         })
         .on("error", (err) => {
-          fs.unlink(path, () => reject(err.message));
+          fs.unlink(tempPath, () => reject(err.message));
         });
     });
   };
