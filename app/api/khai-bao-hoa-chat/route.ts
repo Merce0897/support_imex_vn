@@ -20,8 +20,8 @@ export async function POST(request: Request) {
         cas: item.casNo,
         hs: item.hsCd,
         name: item.itemNm,
-        content: item.content,
-        weight: item.weight,
+        content: item.content.trim(),
+        weight: item.weight.trim(),
         unit: (item.unit + 1).toString(),
         state: (item.state + 1).toString(),
         origin: (item.origin + 1).toString(),
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       };
     }),
   };
-  callCreateNewChemical(filterData);
+  const res = await callCreateNewChemical(filterData);
 
-  return NextResponse.json({ message: "HELLO FROM VINH" }, { status: 200 });
+  return NextResponse.json({ message: res }, { status: 200 });
 }

@@ -14,8 +14,17 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, CircleCheck, CircleX } from "lucide-react"
 import {
     Popover,
     PopoverContent,
@@ -25,6 +34,7 @@ import { ComboboxDemo } from '@/components/select/Select'
 import { UploadFile } from '@/components/UploadFile/UploadFile'
 import { TableDemo } from './table'
 import { DialogDemo } from './createNewChemical'
+import { Spinner } from '@/components/spinner/Spinner'
 
 
 type Inputs = {
@@ -52,10 +62,15 @@ type Inputs = {
 
 function Page() {
     const [calendarOpen, setCalendarOpen] = useState(false);
+    const [waiting, setWaiting] = useState(false)
+    const [success, setSuccess] = useState(false)
+    const [open, setOpen] = useState(false)
 
     const form = useForm<Inputs>()
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
+        setOpen(true)
+        setWaiting(true)
         console.log(data)
         fetch('/api/khai-bao-hoa-chat', {
             method: 'POST',
@@ -63,6 +78,12 @@ function Page() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
+        }).then(res => res.json()).then(res => {
+            setWaiting(false)
+            if (res.message === 'success') {
+
+                setSuccess(true)
+            }
         })
     }
 
@@ -235,7 +256,36 @@ function Page() {
                     </form>
                 </Form>
                 <div className='h-48 w-full' />
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Thông báo</DialogTitle>
+                            <DialogDescription>
+                            </DialogDescription>
+                        </DialogHeader>
+                        {
+                            !waiting ? (
+                                <div className="grid gap-4 py-10 text-center">
+                                    <h2 className='text-lg font-bold'>
+                                        {success ? 'Yêu cầu đã được gửi thành công' : 'Có lỗi xảy ra trong quá trình khởi tạo, liên hệ Vinh'}
+                                    </h2>
+                                    <div className='flex justify-center'>
+                                        {success ? <CircleCheck size={50} color='green' /> : <CircleX size={50} color='red' />}
+                                    </div>
+                                </div>
+                            )
+                                : (
+                                    <div className="grid gap-4 py-10 text-center">
+                                        <div className='flex justify-center'>
+                                            <Spinner />
 
+                                        </div>
+                                        <h2 className='text-lg font-bold'>Đang chờ kết quả</h2>
+                                    </div>
+                                )
+                        }
+                    </DialogContent>
+                </Dialog>
             </div>
 
         </div>

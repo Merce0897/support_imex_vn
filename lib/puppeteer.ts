@@ -32,7 +32,8 @@ type Record = {
 
 export const callCreateNewChemical = async (record: Record) => {
   console.log("NEW RECORD: ", record);
-
+  let res = false,
+    error = "";
   // Launch the browser and open a new blank page
   const user = {
     id: "3700337163",
@@ -77,7 +78,8 @@ export const callCreateNewChemical = async (record: Record) => {
     concurrency: Cluster.CONCURRENCY_CONTEXT,
     maxConcurrency: 4,
     puppeteerOptions: {
-      headless: true,
+      headless: false,
+      slowMo: 10,
       args: [
         "--no-sandbox",
         "--disable-dev-shm-usage",
@@ -194,7 +196,9 @@ export const callCreateNewChemical = async (record: Record) => {
         detail
       );
       console.log("assaeeett");
-
+      await page.screenshot({
+        path: "./screenshot.jpg",
+      });
       await Promise.all([
         page.click(
           '::-p-xpath(//*[@id="modal_addProduct"]/div[3]/div/button[1])'
@@ -373,7 +377,9 @@ export const callCreateNewChemical = async (record: Record) => {
 
       fs.unlink(fileNameInv, (err) => console.log(err));
       fs.unlink(fileNameSft, (err) => console.log(err));
+      res = true;
     } catch (error) {
+      error = error;
       console.log(error);
     }
   });
@@ -384,4 +390,5 @@ export const callCreateNewChemical = async (record: Record) => {
 
   await cluster.idle();
   await cluster.close();
+  return res ? "success" : `error: ${error}`;
 };
